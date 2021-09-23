@@ -87,5 +87,11 @@ namespace Richasy.Bili.Lib.Interfaces
         /// <returns>转换结果.</returns>
         Task<T> ParseAsync<T>(HttpResponseMessage response, MessageParser<T> parser)
             where T : IMessage<T>;
+
+        /// <summary>
+        /// 初始化Web.Http.HttpClient的Cookie.
+        /// </summary>
+        /// <returns><see cref="Task"/>.</returns>
+        Task InitializeLocalCookieAsync();
     }
 }

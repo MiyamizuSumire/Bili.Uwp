@@ -131,6 +131,7 @@ namespace Richasy.Bili.ViewModels.Uwp
                     await LoadPgcDetailAsync(Convert.ToInt32(videoId), seasonId, isRefresh);
                     break;
                 case VideoType.Live:
+                    await Controller.InitializeNetworkEnvorimentAsync();
                     await LoadLiveDetailAsync(Convert.ToInt32(videoId), isRefresh);
                     break;
                 default:

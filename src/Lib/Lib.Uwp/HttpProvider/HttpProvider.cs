@@ -14,6 +14,7 @@ using Richasy.Bili.Models.App.Constants;
 using Richasy.Bili.Models.App.Other;
 using Richasy.Bili.Models.Enums;
 using Richasy.Bili.Models.gRPC;
+using Windows.Web.Http.Filters;
 using static Richasy.Bili.Models.App.Constants.ServiceConstants;
 
 namespace Richasy.Bili.Lib.Uwp
@@ -191,6 +192,16 @@ namespace Richasy.Bili.Lib.Uwp
             {
                 return JsonConvert.DeserializeObject<T2>(responseString);
             }
+        }
+
+        /// <inheritdoc/>
+        public Task InitializeLocalCookieAsync()
+        {
+            var filter = new HttpBaseProtocolFilter();
+            filter.IgnorableServerCertificateErrors.Add(Windows.Security.Cryptography.Certificates.ChainValidationResult.Expired);
+            filter.AllowAutoRedirect = true;
+            var client = new Windows.Web.Http.HttpClient(filter);
+            return client.GetStringAsync(new Uri("https://www.bilibili.com")).AsTask();
         }
     }
 }

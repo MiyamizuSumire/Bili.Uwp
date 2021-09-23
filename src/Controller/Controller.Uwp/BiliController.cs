@@ -36,6 +36,7 @@ namespace Richasy.Bili.Controller.Uwp
         private readonly IPlayerProvider _playerProvider;
         private readonly ISearchProvider _searchProvider;
         private readonly ICommunityProvider _communityProvider;
+        private readonly IHttpProvider _httpProvider;
 
         private readonly INetworkModule _networkModule;
         private readonly ILoggerModule _loggerModule;
@@ -47,6 +48,8 @@ namespace Richasy.Bili.Controller.Uwp
         private CancellationTokenSource _liveCancellationToken;
         private bool _isLiveSocketConnected;
         private Task _liveConnectionTask;
+
+        private bool _isCookieCached;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BiliController"/> class.
@@ -68,7 +71,8 @@ namespace Richasy.Bili.Controller.Uwp
                 .LoadService(out _pgcProvider)
                 .LoadService(out _playerProvider)
                 .LoadService(out _searchProvider)
-                .LoadService(out _communityProvider);
+                .LoadService(out _communityProvider)
+                .LoadService(out _httpProvider);
 
             InitializeLiveSocket();
             RegisterEvents();
@@ -264,6 +268,18 @@ namespace Richasy.Bili.Controller.Uwp
         /// 当前网络是否正常.
         /// </summary>
         public bool IsNetworkAvailable => _networkModule.IsNetworkAvaliable;
+
+        /// <summary>
+        /// 初始化网络环境.
+        /// </summary>
+        /// <returns><see cref="Task"/>.</returns>
+        public async Task InitializeNetworkEnvorimentAsync()
+        {
+            if (IsNetworkAvailable)
+            {
+                await _httpProvider.InitializeLocalCookieAsync();
+            }
+        }
 
         private void RegisterEvents()
         {
